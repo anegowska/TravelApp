@@ -2,6 +2,7 @@ package com.anegowska.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Table(name="COUNTRIES")
@@ -15,6 +16,9 @@ public class Country {
     @Column(name = "name")
     @NotNull
     private String name;
+
+    @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
+    private List<Hotel> hotels;
 
 
     public Country() {
@@ -38,5 +42,13 @@ public class Country {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Hotel> getHotels() {
+        return hotels;
+    }
+
+    public void setHotels(List<Hotel> hotels) {
+        this.hotels = hotels;
     }
 }

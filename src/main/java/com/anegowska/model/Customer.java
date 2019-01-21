@@ -2,6 +2,7 @@ package com.anegowska.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Table(name="CUSTOMERS")
@@ -28,15 +29,23 @@ public class Customer {
     @NotNull
     private Long phone;
 
+    @ManyToMany
+    @JoinTable(name = "CUSTOMERS_TO_TRAVELS",
+            joinColumns = @JoinColumn(name = "customer_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "travel_id", referencedColumnName = "id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"customer_id", "travel_id"}))
+    private List<Travel> travels;
+
 
     public Customer() {
     }
 
-    public Customer(String name, String surname, Long pesel, Long phone) {
+    public Customer(String name, String surname, Long pesel, Long phone, List<Travel> travels) {
         this.name = name;
         this.surname = surname;
         this.pesel = pesel;
         this.phone = phone;
+        this.travels = travels;
     }
 
     public Long getId() {
@@ -77,5 +86,13 @@ public class Customer {
 
     public void setPhone(Long phone) {
         this.phone = phone;
+    }
+
+    public List<Travel> getTravels() {
+        return travels;
+    }
+
+    public void setTravels(List<Travel> travels) {
+        this.travels = travels;
     }
 }

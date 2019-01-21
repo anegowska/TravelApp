@@ -2,6 +2,7 @@ package com.anegowska.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Table(name="TRAVELS")
@@ -19,17 +20,21 @@ public class Travel {
     @Column(name = "price")
     private Integer price;
 
-    @Column(name = "hotel_name")
-    private String hotelName;
+    @ManyToOne
+    @JoinColumn(name = "hotel_id")
+    private Hotel hotel;
+
+    @ManyToMany(mappedBy = "travels")
+    private List<Customer> customers;
 
 
     public Travel() {
     }
 
-    public Travel(Integer numberOfDays, Integer price, String hotelName) {
+    public Travel(Integer numberOfDays, Integer price, Hotel hotel) {
         this.numberOfDays = numberOfDays;
         this.price = price;
-        this.hotelName = hotelName;
+        this.hotel = hotel;
     }
 
     public Long getId() {
@@ -56,11 +61,19 @@ public class Travel {
         this.price = price;
     }
 
-    public String getHotelName() {
-        return hotelName;
+    public Hotel getHotel() {
+        return hotel;
     }
 
-    public void setHotelName(String hotelName) {
-        this.hotelName = hotelName;
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
+    }
+
+    public List<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
     }
 }

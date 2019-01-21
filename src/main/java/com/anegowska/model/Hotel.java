@@ -2,6 +2,7 @@ package com.anegowska.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Table(name="HOTELS")
@@ -16,20 +17,25 @@ public class Hotel {
     @NotNull
     private String name;
 
-    @Column(name = "name")
+    @Column(name = "stars")
     private Integer stars;
 
-    @Column(name = "name")
-    private String city;
+    @ManyToOne
+    @JoinColumn(name = "city_id")
+    private City city;
 
-    @Column(name = "name")
-    private String country;
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    private Country country;
+
+    @OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY)
+    private List<Travel> travels;
 
 
     public Hotel() {
     }
 
-    public Hotel(String name, Integer stars, String city, String country) {
+    public Hotel(String name, Integer stars, City city, Country country) {
         this.name = name;
         this.stars = stars;
         this.city = city;
@@ -60,19 +66,19 @@ public class Hotel {
         this.stars = stars;
     }
 
-    public String getCity() {
+    public City getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(City city) {
         this.city = city;
     }
 
-    public String getCountry() {
+    public Country getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(Country country) {
         this.country = country;
     }
 }
