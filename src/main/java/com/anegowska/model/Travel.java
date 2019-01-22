@@ -20,6 +20,12 @@ public class Travel {
     @Column(name = "price")
     private Integer price;
 
+    @Column(name = "transport")
+    private Transport transport;
+
+    @Column(name = "board")
+    private Board board;
+
     @ManyToOne
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
@@ -31,9 +37,11 @@ public class Travel {
     public Travel() {
     }
 
-    public Travel(Integer numberOfDays, Integer price, Hotel hotel) {
+    public Travel(Integer numberOfDays, Integer price, Transport transport, Board board, Hotel hotel) {
         this.numberOfDays = numberOfDays;
         this.price = price;
+        this.transport = transport;
+        this.board = board;
         this.hotel = hotel;
     }
 
@@ -59,6 +67,22 @@ public class Travel {
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    public Transport getTransport() {
+        return transport;
+    }
+
+    public void setTransport(Transport transport) {
+        this.transport = transport;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
     }
 
     public Hotel getHotel() {
