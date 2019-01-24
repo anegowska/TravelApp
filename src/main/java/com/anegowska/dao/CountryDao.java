@@ -1,8 +1,6 @@
 package com.anegowska.dao;
 
-import com.anegowska.model.City;
 import com.anegowska.model.Country;
-import com.anegowska.model.Hotel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
