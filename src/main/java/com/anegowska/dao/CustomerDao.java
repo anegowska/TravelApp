@@ -1,6 +1,5 @@
 package com.anegowska.dao;
 
-import com.anegowska.model.City;
 import com.anegowska.model.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

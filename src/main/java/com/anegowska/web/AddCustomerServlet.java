@@ -1,8 +1,10 @@
 package com.anegowska.web;
 
 import com.anegowska.dao.CustomerDao;
+import com.anegowska.dao.TravelDao;
 import com.anegowska.freemarker.TemplateProvider;
 import com.anegowska.model.Customer;
+import com.anegowska.model.Travel;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +33,9 @@ public class AddCustomerServlet extends HttpServlet {
 
     @Inject
     private CustomerDao customerDao;
+
+    @Inject
+    private TravelDao travelDao;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -56,8 +62,11 @@ public class AddCustomerServlet extends HttpServlet {
         String surname = req.getParameter("surname");
         Long pesel = Long.valueOf(req.getParameter("pesel"));
         Long phone = Long.valueOf(req.getParameter("phone"));
+        Long travelId = Long.valueOf(req.getParameter("travelId"));
 
-        Customer customer = new Customer(name, surname, pesel, phone);
+        Travel travel = travelDao.findById(travelId);
+
+        Customer customer = new Customer(name, surname, pesel, phone, Arrays.asList(travel));
         customerDao.save(customer);
 
         resp.sendRedirect("/customers");
