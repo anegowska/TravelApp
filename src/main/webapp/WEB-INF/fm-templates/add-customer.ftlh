@@ -2,7 +2,6 @@
 <body>
 <h1>Add customer:</h1>
 <form method="post" action="/customer">
-    ID: <input type="number" name="id"/><br/><br/>
     Name: <input type="text" name="name"/><br/><br/>
     Surname: <input type="text" name="surname"/><br/><br/>
     Pesel: <input type="number" name="pesel"/><br/><br/>

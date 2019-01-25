@@ -3,10 +3,9 @@ package com.anegowska.web;
 import com.anegowska.dao.CityDao;
 import com.anegowska.dao.CountryDao;
 import com.anegowska.dao.HotelDao;
+import com.anegowska.dao.TravelDao;
 import com.anegowska.freemarker.TemplateProvider;
-import com.anegowska.model.City;
-import com.anegowska.model.Country;
-import com.anegowska.model.Hotel;
+import com.anegowska.model.*;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -41,6 +40,9 @@ public class LoadingServlet extends HttpServlet {
     @Inject
     private HotelDao hotelDao;
 
+    @Inject
+    private TravelDao travelDao;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -50,6 +52,8 @@ public class LoadingServlet extends HttpServlet {
 
         saveCountries();
         saveCities();
+        saveHotels();
+        saveTravels();
 
         Template template = templateProvider.getTemplate(
                 getServletContext(), TEMPLATE_NAME
@@ -76,4 +80,17 @@ public class LoadingServlet extends HttpServlet {
         cityDao.save(new City("Lisbon"));
     }
 
+    private void saveHotels() {
+
+        hotelDao.save(new Hotel("Hotel Dalia Ramblas", 3, cityDao.findById(1l), countryDao.findById(1l)));
+        hotelDao.save(new Hotel("Hotel Palazzo Paruta", 4, cityDao.findById(2l), countryDao.findById(2l)));
+        hotelDao.save(new Hotel("Hotel da Baixa", 4, cityDao.findById(3l), countryDao.findById(3l)));
+    }
+
+    private void saveTravels() {
+
+        travelDao.save(new Travel(8, 3500, Transport.PLANE, Board.HB, hotelDao.findById(1l)));
+        travelDao.save(new Travel(14, 5000, Transport.PLANE, Board.ALL_INCLUSIVE, hotelDao.findById(2l)));
+        travelDao.save(new Travel(7, 4200, Transport.PLANE, Board.BREAKFAST, hotelDao.findById(3l)));
+    }
 }

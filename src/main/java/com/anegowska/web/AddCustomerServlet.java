@@ -52,7 +52,6 @@ public class AddCustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Long id = Long.valueOf(req.getParameter("id"));
         String name = req.getParameter("name");
         String surname = req.getParameter("surname");
         Long pesel = Long.valueOf(req.getParameter("pesel"));
