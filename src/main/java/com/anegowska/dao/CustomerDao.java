@@ -43,10 +43,25 @@ public class CustomerDao {
         return entityManager.find(Customer.class, id);
     }
 
+    public Customer findByPesel(Long pesel) {
+        return entityManager.find(Customer.class, pesel);
+    }
+
     public List<Customer> findAll() {
         final Query query = entityManager.createQuery("SELECT c FROM Customer c");
 
         List<Customer> result = query.getResultList();
+        LOG.info("Found {} customers.", result.size());
+        return result;
+    }
+
+    public List<Customer> findCustomersByTravel(Long tid) {
+        final Query query = entityManager.createQuery("SELECT c FROM Customer c JOIN c.travels t " +
+                "WHERE t.id =:tid");
+
+        query.setParameter("tid", tid);
+
+        List result = query.getResultList();
         LOG.info("Found {} customers.", result.size());
         return result;
     }

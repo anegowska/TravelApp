@@ -16,16 +16,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-@WebServlet("/customer")
-public class AddCustomerServlet extends HttpServlet {
+@Transactional
+@WebServlet("/purchased")
+public class PurchasedTravelsServlet extends HttpServlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AddCustomerServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PurchasedTravelsServlet.class);
 
-    private static final String TEMPLATE_NAME = "add-customer";
+    private static final String TEMPLATE_NAME = "/purchased";
 
     @Inject
     private TemplateProvider templateProvider;
@@ -33,11 +36,11 @@ public class AddCustomerServlet extends HttpServlet {
     @Inject
     private CustomerDao customerDao;
 
+    @Inject
+    private TravelDao travelDao;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        resp.addHeader("Content-Type", "text/html; charset=utf-8");
-
         Map<String, Object> model = new HashMap<>();
 
         Template template = templateProvider.getTemplate(
@@ -54,14 +57,20 @@ public class AddCustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String name = req.getParameter("name");
-        String surname = req.getParameter("surname");
-        Long pesel = Long.valueOf(req.getParameter("pesel"));
-        Long phone = Long.valueOf(req.getParameter("phone"));
+        Long cid = Long.valueOf(req.getParameter("cid"));
+        Long travelId = Long.valueOf(req.getParameter("tid"));
 
-        Customer customer = new Customer(name, surname, pesel, phone);
-        customerDao.save(customer);
+        Customer customer = customerDao.findById(cid);
+        Travel travel = travelDao.findById(travelId);
+        List<Travel> travelList = customer.getTravels();
+        travelList.add(travel);
+        customerDao.update(customer);
 
-        resp.sendRedirect("/customers");
+        List<Customer> customerList = travel.getCustomers();
+        customerList.add(customer);
+        travelDao.update(travel);
+
+        resp.sendRedirect("/purchased");
     }
+
 }

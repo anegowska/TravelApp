@@ -40,6 +40,13 @@ public class Customer {
     public Customer() {
     }
 
+    public Customer(String name, String surname, Long pesel, Long phone) {
+        this.name = name;
+        this.surname = surname;
+        this.pesel = pesel;
+        this.phone = phone;
+    }
+
     public Customer(String name, String surname, Long pesel, Long phone, List<Travel> travels) {
         this.name = name;
         this.surname = surname;
