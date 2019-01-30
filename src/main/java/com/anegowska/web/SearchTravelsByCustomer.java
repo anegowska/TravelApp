@@ -16,19 +16,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Transactional
-@WebServlet("/purchased")
-public class PurchasedTravelsServlet extends HttpServlet {
+@WebServlet("/search")
+public class SearchTravelsByCustomer extends HttpServlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PurchasedTravelsServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SearchTravelsByCustomer.class);
 
-    private static final String TEMPLATE_NAME = "/purchased";
+    private static final String TEMPLATE_NAME = "/search";
 
     @Inject
     private TemplateProvider templateProvider;
@@ -58,19 +56,23 @@ public class PurchasedTravelsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Long cid = Long.valueOf(req.getParameter("cid"));
-        Long travelId = Long.valueOf(req.getParameter("tid"));
-
         Customer customer = customerDao.findById(cid);
-        Travel travel = travelDao.findById(travelId);
-        List<Travel> travelList = customer.getTravels();
-        travelList.add(travel);
-        customerDao.update(customer);
 
-        List<Customer> customerList = travel.getCustomers();
-        customerList.add(customer);
-        travelDao.update(travel);
+        List<Travel> travelsList = travelDao.findPurchasedByCustomer(cid);
+        Map<String, Object> model = new HashMap<>();
 
-        resp.sendRedirect("/purchased");
+        model.put("travels", travelsList);
+        model.put("name", customer.getName());
+        model.put("surname", customer.getSurname());
+
+        Template template = templateProvider.getTemplate(
+                getServletContext(), TEMPLATE_NAME
+        );
+
+        try {
+            template.process(model, resp.getWriter());
+        } catch (TemplateException e) {
+            LOG.error("Error while processing template: ", e);
+        }
     }
-
 }

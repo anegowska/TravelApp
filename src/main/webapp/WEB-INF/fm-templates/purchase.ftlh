@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form method="post" action="/purchased">
+<form method="post" action="/purchase">
     Customer id: <input type="number" name="cid"/>
     Travel id: <input type="number" name="tid"/><br/><br/>
     <input type="submit" name="save" value="save"/><br/><br/>

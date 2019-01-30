@@ -1,6 +1,5 @@
 package com.anegowska.dao;
 
-import com.anegowska.model.Customer;
 import com.anegowska.model.Travel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +53,8 @@ public class TravelDao {
     }
 
     public List<Travel> findPurchasedByCustomer(Long cid) {
-        final Query query = entityManager.createQuery("SELECT t FROM Travel t JOIN t.customers e " +
-                "WHERE e.id =:cid");
+        final Query query = entityManager.createQuery("SELECT t FROM Travel t JOIN t.customers c " +
+                "WHERE c.id =:cid");
 
         query.setParameter("cid", cid);
 

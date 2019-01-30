@@ -1,5 +1,8 @@
 package com.anegowska.model;
 
+import com.anegowska.model.enums.Board;
+import com.anegowska.model.enums.Transport;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;

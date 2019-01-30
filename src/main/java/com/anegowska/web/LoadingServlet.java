@@ -6,6 +6,8 @@ import com.anegowska.dao.HotelDao;
 import com.anegowska.dao.TravelDao;
 import com.anegowska.freemarker.TemplateProvider;
 import com.anegowska.model.*;
+import com.anegowska.model.enums.Board;
+import com.anegowska.model.enums.Transport;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
