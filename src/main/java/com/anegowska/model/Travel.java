@@ -33,8 +33,8 @@ public class Travel {
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
-    @ManyToMany(mappedBy = "travels")
-    private List<Customer> customers;
+    @OneToMany(mappedBy = "travel", fetch = FetchType.LAZY)
+    private List<Purchase> purchases;
 
 
     public Travel() {
@@ -96,11 +96,11 @@ public class Travel {
         this.hotel = hotel;
     }
 
-    public List<Customer> getCustomers() {
-        return customers;
+    public List<Purchase> getPurchases() {
+        return purchases;
     }
 
-    public void setCustomers(List<Customer> customers) {
-        this.customers = customers;
+    public void setPurchases(List<Purchase> purchases) {
+        this.purchases = purchases;
     }
 }

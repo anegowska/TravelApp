@@ -1,9 +1,11 @@
 package com.anegowska.web;
 
 import com.anegowska.dao.CustomerDao;
+import com.anegowska.dao.PurchaseDao;
 import com.anegowska.dao.TravelDao;
 import com.anegowska.freemarker.TemplateProvider;
 import com.anegowska.model.Customer;
+import com.anegowska.model.Purchase;
 import com.anegowska.model.Travel;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -37,6 +39,9 @@ public class SearchTravelsByCustomer extends HttpServlet {
     @Inject
     private TravelDao travelDao;
 
+    @Inject
+    private PurchaseDao purchaseDao;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, Object> model = new HashMap<>();
@@ -58,10 +63,10 @@ public class SearchTravelsByCustomer extends HttpServlet {
         Long cid = Long.valueOf(req.getParameter("cid"));
         Customer customer = customerDao.findById(cid);
 
-        List<Travel> travelsList = travelDao.findPurchasedByCustomer(cid);
+        List<Purchase> purchases = purchaseDao.findByCustomer(cid);
         Map<String, Object> model = new HashMap<>();
 
-        model.put("travels", travelsList);
+        model.put("purchases", purchases);
         model.put("name", customer.getName());
         model.put("surname", customer.getSurname());
 

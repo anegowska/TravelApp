@@ -51,15 +51,4 @@ public class TravelDao {
         LOG.info("Found {} travles.", result.size());
         return result;
     }
-
-    public List<Travel> findPurchasedByCustomer(Long cid) {
-        final Query query = entityManager.createQuery("SELECT t FROM Travel t JOIN t.customers c " +
-                "WHERE c.id =:cid");
-
-        query.setParameter("cid", cid);
-
-        List result = query.getResultList();
-        LOG.info("Found {} travles.", result.size());
-        return result;
-    }
 }

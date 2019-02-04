@@ -29,12 +29,8 @@ public class Customer {
     @NotNull
     private Long phone;
 
-    @ManyToMany
-    @JoinTable(name = "CUSTOMERS_TO_TRAVELS",
-            joinColumns = @JoinColumn(name = "customer_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "travel_id", referencedColumnName = "id"),
-            uniqueConstraints = @UniqueConstraint(columnNames = {"customer_id", "travel_id"}))
-    private List<Travel> travels;
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    private List<Purchase> purchases;
 
 
     public Customer() {
@@ -45,14 +41,6 @@ public class Customer {
         this.surname = surname;
         this.pesel = pesel;
         this.phone = phone;
-    }
-
-    public Customer(String name, String surname, Long pesel, Long phone, List<Travel> travels) {
-        this.name = name;
-        this.surname = surname;
-        this.pesel = pesel;
-        this.phone = phone;
-        this.travels = travels;
     }
 
     public Long getId() {
@@ -95,11 +83,11 @@ public class Customer {
         this.phone = phone;
     }
 
-    public List<Travel> getTravels() {
-        return travels;
+    public List<Purchase> getPurchases() {
+        return purchases;
     }
 
-    public void setTravels(List<Travel> travels) {
-        this.travels = travels;
+    public void setPurchases(List<Purchase> purchases) {
+        this.purchases = purchases;
     }
 }

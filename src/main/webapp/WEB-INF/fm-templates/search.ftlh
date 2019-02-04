@@ -16,7 +16,7 @@
     <input type="submit" name="save" value="search"/><br/><br/>
 </form>
 
-<#if travels??>
+<#if purchases??>
 <h3>Travels purchased by ${name} ${surname}:</h3>
 <table class="table">
     <thead>
@@ -29,13 +29,13 @@
     </tr>
     </thead>
     <tbody>
-        <#list travels as t>
+        <#list purchases as p>
         <tr>
-            <td>${t.hotel.name}</td>
-            <td>${t.numberOfDays}</td>
-            <td>${t.price}</td>
-            <td>${t.transport}</td>
-            <td>${t.board}</td>
+            <td>${p.travel.hotel.name}</td>
+            <td>${p.travel.numberOfDays}</td>
+            <td>${p.travel.price}</td>
+            <td>${p.travel.transport}</td>
+            <td>${p.travel.board}</td>
         </tr>
         </#list>
     </tbody>
