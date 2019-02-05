@@ -48,6 +48,11 @@ public class PurchaseServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, Object> model = new HashMap<>();
 
+        List<Purchase> purchasesList = purchaseDao.findAll();
+        LOG.info("Found {} purchases", purchasesList.size());
+
+        model.put("purchases", purchasesList);
+
         Template template = templateProvider.getTemplate(
                 getServletContext(), TEMPLATE_NAME
         );
@@ -61,7 +66,6 @@ public class PurchaseServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         Long cid = Long.valueOf(req.getParameter("cid"));
         Long travelId = Long.valueOf(req.getParameter("tid"));
 
@@ -70,8 +74,6 @@ public class PurchaseServlet extends HttpServlet {
 
         Purchase purchase = new Purchase(customer, travel);
         purchaseDao.save(purchase);
-
-        resp.sendRedirect("/search");
     }
 
 }
