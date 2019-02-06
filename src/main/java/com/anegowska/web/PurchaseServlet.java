@@ -7,6 +7,8 @@ import com.anegowska.freemarker.TemplateProvider;
 import com.anegowska.model.Customer;
 import com.anegowska.model.Purchase;
 import com.anegowska.model.Travel;
+import com.anegowska.services.PurchaseDeleteService;
+import com.anegowska.services.PurchaseSaveService;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -36,13 +38,13 @@ public class PurchaseServlet extends HttpServlet {
     private TemplateProvider templateProvider;
 
     @Inject
-    private CustomerDao customerDao;
-
-    @Inject
-    private TravelDao travelDao;
-
-    @Inject
     private PurchaseDao purchaseDao;
+
+    @Inject
+    private PurchaseSaveService purchaseSaveService;
+
+    @Inject
+    private PurchaseDeleteService purchaseDeleteService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -66,14 +68,14 @@ public class PurchaseServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long cid = Long.valueOf(req.getParameter("cid"));
-        Long travelId = Long.valueOf(req.getParameter("tid"));
 
-        Customer customer = customerDao.findById(cid);
-        Travel travel = travelDao.findById(travelId);
+        String action = req.getParameter("action");
 
-        Purchase purchase = new Purchase(customer, travel);
-        purchaseDao.save(purchase);
+        if ("add".equals(action)) {
+            purchaseSaveService.save(req);
+        } else if ("delete".equals(action)) {
+            purchaseDeleteService.delete(req);
+        }
 
         doGet(req, resp);
     }

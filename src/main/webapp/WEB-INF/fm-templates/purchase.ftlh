@@ -22,6 +22,7 @@
         <th scope="col">Price</th>
         <th scope="col">Transport</th>
         <th scope="col">Board</th>
+        <th scope="col"></th>
     </tr>
     </thead>
     <tbody>
@@ -34,6 +35,12 @@
             <td>${p.travel.price}</td>
             <td>${p.travel.transport}</td>
             <td>${p.travel.board}</td>
+            <td>
+                <form method="post" action="/purchase?action=delete">
+                    <input type="hidden" name="pid" value="${p.id}">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
         </tr>
         </#list>
     </tbody>
@@ -41,7 +48,7 @@
 </#if>
 <br/>
 <p>Add new purchase:</p>
-<form method="post" action="/purchase">
+<form method="post" action="/purchase?action=add">
     Customer id: <input type="number" name="cid"/>
     Travel id: <input type="number" name="tid"/><br/><br/>
     <input type="submit" name="save" value="save"/><br/><br/>

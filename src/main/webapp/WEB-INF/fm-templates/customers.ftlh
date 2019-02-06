@@ -39,5 +39,7 @@
         </#list>
     </tbody>
 </table>
+<br/>
+<a href="/customer">Back to <strong>Add customer</strong></a>
 </body>
 </html>

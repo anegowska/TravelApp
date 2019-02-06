@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 
 @WebServlet("/customers")
-public class CustomersServlet extends HttpServlet {
+public class CustomersListServlet extends HttpServlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CustomersServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CustomersListServlet.class);
 
     private static final String TEMPLATE_NAME = "/customers";
 
