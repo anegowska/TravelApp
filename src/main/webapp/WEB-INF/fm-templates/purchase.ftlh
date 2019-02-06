@@ -38,7 +38,7 @@
             <td>
                 <form method="post" action="/purchase?action=delete">
                     <input type="hidden" name="pid" value="${p.id}">
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-danger">Resign</button>
                 </form>
             </td>
         </tr>
