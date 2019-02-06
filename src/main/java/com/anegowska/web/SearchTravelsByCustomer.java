@@ -2,11 +2,9 @@ package com.anegowska.web;
 
 import com.anegowska.dao.CustomerDao;
 import com.anegowska.dao.PurchaseDao;
-import com.anegowska.dao.TravelDao;
 import com.anegowska.freemarker.TemplateProvider;
 import com.anegowska.model.Customer;
 import com.anegowska.model.Purchase;
-import com.anegowska.model.Travel;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -37,24 +35,13 @@ public class SearchTravelsByCustomer extends HttpServlet {
     private CustomerDao customerDao;
 
     @Inject
-    private TravelDao travelDao;
-
-    @Inject
     private PurchaseDao purchaseDao;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, Object> model = new HashMap<>();
 
-        Template template = templateProvider.getTemplate(
-                getServletContext(), TEMPLATE_NAME
-        );
-
-        try {
-            template.process(model, resp.getWriter());
-        } catch (TemplateException e) {
-            LOG.error("Error while processing template: ", e);
-        }
+        sendModelToTemplate(resp, model);
     }
 
     @Override
@@ -69,6 +56,11 @@ public class SearchTravelsByCustomer extends HttpServlet {
         model.put("purchases", purchases);
         model.put("name", customer.getName());
         model.put("surname", customer.getSurname());
+
+        sendModelToTemplate(resp, model);
+    }
+
+    private void sendModelToTemplate(HttpServletResponse resp, Map<String, Object> model) throws IOException {
 
         Template template = templateProvider.getTemplate(
                 getServletContext(), TEMPLATE_NAME

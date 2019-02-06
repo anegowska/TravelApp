@@ -1,10 +1,8 @@
 package com.anegowska.web;
 
-import com.anegowska.dao.CustomerDao;
-import com.anegowska.dao.TravelDao;
 import com.anegowska.freemarker.TemplateProvider;
-import com.anegowska.model.Customer;
-import com.anegowska.model.Travel;
+import com.anegowska.services.CustomerDeleteService;
+import com.anegowska.services.CustomerSaveService;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -21,9 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @WebServlet("/customer")
-public class AddCustomerServlet extends HttpServlet {
+public class CustomerServlet extends HttpServlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AddCustomerServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CustomerServlet.class);
 
     private static final String TEMPLATE_NAME = "add-customer";
 
@@ -31,7 +29,10 @@ public class AddCustomerServlet extends HttpServlet {
     private TemplateProvider templateProvider;
 
     @Inject
-    private CustomerDao customerDao;
+    private CustomerSaveService customerSaveService;
+
+    @Inject
+    private CustomerDeleteService customerDeleteService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -54,13 +55,14 @@ public class AddCustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String name = req.getParameter("name");
-        String surname = req.getParameter("surname");
-        Long pesel = Long.valueOf(req.getParameter("pesel"));
-        Long phone = Long.valueOf(req.getParameter("phone"));
+        String action = req.getParameter("action");
 
-        Customer customer = new Customer(name, surname, pesel, phone);
-        customerDao.save(customer);
+
+        if ("add".equals(action)) {
+            customerSaveService.save(req);
+        } else if ("delete".equals(action)) {
+            customerDeleteService.delete(req);
+        }
 
         resp.sendRedirect("/customers");
     }

@@ -74,6 +74,8 @@ public class PurchaseServlet extends HttpServlet {
 
         Purchase purchase = new Purchase(customer, travel);
         purchaseDao.save(purchase);
+
+        doGet(req, resp);
     }
 
 }

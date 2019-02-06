@@ -1,7 +1,7 @@
 <html>
 <body>
 <h1>Add customer:</h1>
-<form method="post" action="/customer">
+<form method="post" action="/customer?action=add">
     Name: <input type="text" name="name"/><br/><br/>
     Surname: <input type="text" name="surname"/><br/><br/>
     Pesel: <input type="number" name="pesel"/><br/><br/>
