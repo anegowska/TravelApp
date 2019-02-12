@@ -49,8 +49,34 @@
 <br/>
 <p>Add new purchase:</p>
 <form method="post" action="/purchase?action=add">
-    Customer id: <input type="number" name="cid"/>
-    Travel id: <input type="number" name="tid"/><br/><br/>
+
+    <#list customers>
+        <div class="form-group">
+
+            <label form="chooseCustomer">Customer</label>
+            <select name="cid" class="form-control" id="chooseCustomer">
+
+                <#items as c>
+                    <option value="${c.id}">${c.name} ${c.surname}, pesel: ${c.pesel}</option>
+                </#items>
+            </select>
+
+        </div>
+    </#list>
+
+    <#list travels>
+        <div class="form-group">
+
+            <label form="chooseTravel">Travel</label>
+            <select name="tid" class="form-control" id="chooseTravel">
+
+                <#items as t>
+                    <option value="${t.id}">${t.hotel.name}, number of days: ${t.numberOfDays}, price: ${t.price}</option>
+                </#items>
+            </select>
+
+        </div>
+    </#list>
     <input type="submit" name="save" value="save"/><br/><br/>
 </form>
 

@@ -1,8 +1,7 @@
 package com.anegowska.web;
 
-import com.anegowska.dao.CustomerDao;
 import com.anegowska.freemarker.TemplateProvider;
-import com.anegowska.model.Customer;
+import com.anegowska.publishers.CustomersListPublisher;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @WebServlet("/customers")
@@ -30,16 +28,14 @@ public class CustomersListServlet extends HttpServlet {
     private TemplateProvider templateProvider;
 
     @Inject
-    private CustomerDao customerDao;
+    private CustomersListPublisher customersListPublisher;
 
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, Object> model = new HashMap<>();
-        List<Customer> customers = customerDao.findAll();
-        LOG.info("Found {} customers", customers.size());
 
-        model.put("customers", customers);
+        customersListPublisher.publishAlCustomers(model);
 
         Template template = templateProvider.getTemplate(
                 getServletContext(), TEMPLATE_NAME
