@@ -1,12 +1,12 @@
 package com.anegowska.web;
 
-import com.anegowska.dao.PurchaseDao;
 import com.anegowska.freemarker.TemplateProvider;
-import com.anegowska.model.Purchase;
-import com.anegowska.publishers.CustomersListPublisher;
+import com.anegowska.publishers.BoardTypePublisher;
+import com.anegowska.publishers.HotelsListPublisher;
+import com.anegowska.publishers.TransportTypePublisher;
 import com.anegowska.publishers.TravelsListPublisher;
-import com.anegowska.services.PurchaseDeleteService;
-import com.anegowska.services.PurchaseSaveService;
+import com.anegowska.services.TravelDeleteService;
+import com.anegowska.services.TravelSaveService;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -18,49 +18,46 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-@Transactional
-@WebServlet("/purchase")
-public class PurchaseServlet extends HttpServlet {
+@WebServlet("/travel")
+public class TravelServlet extends HttpServlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PurchaseServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TravelServlet.class);
 
-    private static final String TEMPLATE_NAME = "/purchase";
+    private static final String TEMPLATE_NAME = "/travel";
 
     @Inject
     private TemplateProvider templateProvider;
 
     @Inject
-    private PurchaseDao purchaseDao;
-
-    @Inject
-    private PurchaseSaveService purchaseSaveService;
-
-    @Inject
-    private PurchaseDeleteService purchaseDeleteService;
-
-    @Inject
-    private CustomersListPublisher customersListPublisher;
-
-    @Inject
     private TravelsListPublisher travelsListPublisher;
+
+    @Inject
+    private HotelsListPublisher hotelsListPublisher;
+
+    @Inject
+    private TravelSaveService travelSaveService;
+
+    @Inject
+    private TravelDeleteService travelDeleteService;
+
+    @Inject
+    private TransportTypePublisher transportTypePublisher;
+
+    @Inject
+    private BoardTypePublisher boardTypePublisher;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, Object> model = new HashMap<>();
 
-        List<Purchase> purchasesList = purchaseDao.findAll();
-        LOG.info("Found {} purchases", purchasesList.size());
-
-        model.put("purchases", purchasesList);
-
-        customersListPublisher.publishAlCustomers(model);
         travelsListPublisher.publishAllTravels(model);
+        hotelsListPublisher.publishAllHotels(model);
+        transportTypePublisher.publishAllTransportTypes(model);
+        boardTypePublisher.publishAllBoardTypes(model);
 
         Template template = templateProvider.getTemplate(
                 getServletContext(), TEMPLATE_NAME
@@ -79,12 +76,11 @@ public class PurchaseServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if ("add".equals(action)) {
-            purchaseSaveService.save(req);
+            travelSaveService.save(req);
         } else if ("delete".equals(action)) {
-            purchaseDeleteService.delete(req);
+            travelDeleteService.delete(req);
         }
 
         doGet(req, resp);
     }
-
 }
