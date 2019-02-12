@@ -1,10 +1,10 @@
 package com.anegowska.web;
 
-import com.anegowska.dao.CountryDao;
+import com.anegowska.dao.CityDao;
 import com.anegowska.freemarker.TemplateProvider;
-import com.anegowska.model.Country;
-import com.anegowska.services.CountryDeleteService;
-import com.anegowska.services.CountrySaveService;
+import com.anegowska.model.City;
+import com.anegowska.services.CityDeleteService;
+import com.anegowska.services.CitySaveService;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -21,33 +21,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet("/country")
-public class CountryServlet extends HttpServlet {
+@WebServlet("/city")
+public class CityServlet extends HttpServlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CountryServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CityServlet.class);
 
-    private static final String TEMPLATE_NAME = "country";
+    private static final String TEMPLATE_NAME = "city";
 
     @Inject
     private TemplateProvider templateProvider;
 
     @Inject
-    private CountryDao countryDao;
+    private CityDao cityDao;
 
     @Inject
-    private CountrySaveService countrySaveService;
+    private CitySaveService citySaveService;
 
     @Inject
-    private CountryDeleteService countryDeleteService;
+    private CityDeleteService cityDeleteService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, Object> model = new HashMap<>();
 
-        List<Country> countries = countryDao.findAll();
-        LOG.info("Found {} countries", countries.size());
+        List<City> cities = cityDao.findAll();
+        LOG.info("Found {} cities", cities.size());
 
-        model.put("countries", countries);
+        model.put("cities", cities);
 
         Template template = templateProvider.getTemplate(
                 getServletContext(), TEMPLATE_NAME
@@ -67,13 +67,11 @@ public class CountryServlet extends HttpServlet {
 
 
         if ("add".equals(action)) {
-            countrySaveService.save(req);
+            citySaveService.save(req);
         } else if ("delete".equals(action)) {
-            countryDeleteService.delete(req);
+            cityDeleteService.delete(req);
         }
 
         doGet(req, resp);
     }
-
-
 }
