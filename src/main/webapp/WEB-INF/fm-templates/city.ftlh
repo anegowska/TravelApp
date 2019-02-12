@@ -17,7 +17,6 @@
     <tr>
         <th scope="col">Name</th>
         <th scope="col"></th>
-        <th scope="col"></th>
 
     </tr>
     </thead>
@@ -37,7 +36,7 @@
 </table>
 </#if>
 <br/>
-<p>Add new country:</p>
+<p>Add new city:</p>
 <form method="post" action="/city?action=add">
     Name: <input type="text" name="name"/><br/><br/>
     <input type="submit" name="save" value="save"/><br/><br/>
