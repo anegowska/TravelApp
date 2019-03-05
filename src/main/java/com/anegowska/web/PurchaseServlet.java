@@ -1,9 +1,8 @@
 package com.anegowska.web;
 
-import com.anegowska.dao.PurchaseDao;
 import com.anegowska.freemarker.TemplateProvider;
-import com.anegowska.model.Purchase;
 import com.anegowska.publishers.CustomersListPublisher;
+import com.anegowska.publishers.PurchaseListPublisher;
 import com.anegowska.publishers.TravelsListPublisher;
 import com.anegowska.services.PurchaseDeleteService;
 import com.anegowska.services.PurchaseSaveService;
@@ -21,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Transactional
@@ -36,13 +34,13 @@ public class PurchaseServlet extends HttpServlet {
     private TemplateProvider templateProvider;
 
     @Inject
-    private PurchaseDao purchaseDao;
-
-    @Inject
     private PurchaseSaveService purchaseSaveService;
 
     @Inject
     private PurchaseDeleteService purchaseDeleteService;
+
+    @Inject
+    private PurchaseListPublisher purchaseListPublisher;
 
     @Inject
     private CustomersListPublisher customersListPublisher;
@@ -54,11 +52,7 @@ public class PurchaseServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, Object> model = new HashMap<>();
 
-        List<Purchase> purchasesList = purchaseDao.findAll();
-        LOG.info("Found {} purchases", purchasesList.size());
-
-        model.put("purchases", purchasesList);
-
+        purchaseListPublisher.publishAllPurchases(model);
         customersListPublisher.publishAlCustomers(model);
         travelsListPublisher.publishAllTravels(model);
 
