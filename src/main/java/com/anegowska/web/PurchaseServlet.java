@@ -2,7 +2,7 @@ package com.anegowska.web;
 
 import com.anegowska.freemarker.TemplateProvider;
 import com.anegowska.publishers.CustomersListPublisher;
-import com.anegowska.publishers.PurchaseListPublisher;
+import com.anegowska.publishers.PurchasesListPublisher;
 import com.anegowska.publishers.TravelsListPublisher;
 import com.anegowska.services.PurchaseDeleteService;
 import com.anegowska.services.PurchaseSaveService;
@@ -40,7 +40,7 @@ public class PurchaseServlet extends HttpServlet {
     private PurchaseDeleteService purchaseDeleteService;
 
     @Inject
-    private PurchaseListPublisher purchaseListPublisher;
+    private PurchasesListPublisher purchasesListPublisher;
 
     @Inject
     private CustomersListPublisher customersListPublisher;
@@ -52,7 +52,7 @@ public class PurchaseServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, Object> model = new HashMap<>();
 
-        purchaseListPublisher.publishAllPurchases(model);
+        purchasesListPublisher.publishAllPurchases(model);
         customersListPublisher.publishAlCustomers(model);
         travelsListPublisher.publishAllTravels(model);
 

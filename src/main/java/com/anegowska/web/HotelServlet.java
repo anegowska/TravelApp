@@ -1,10 +1,9 @@
 package com.anegowska.web;
 
-import com.anegowska.dao.HotelDao;
 import com.anegowska.freemarker.TemplateProvider;
-import com.anegowska.model.Hotel;
 import com.anegowska.publishers.CitiesListPublisher;
 import com.anegowska.publishers.CountriesListPublisher;
+import com.anegowska.publishers.HotelsListPublisher;
 import com.anegowska.services.HotelDeleteService;
 import com.anegowska.services.HotelSaveService;
 import freemarker.template.Template;
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @WebServlet("/hotel")
@@ -34,7 +32,7 @@ public class HotelServlet extends HttpServlet {
     private TemplateProvider templateProvider;
 
     @Inject
-    private HotelDao hotelDao;
+    private HotelsListPublisher hotelsListPublisher;
 
     @Inject
     private HotelSaveService hotelSaveService;
@@ -52,11 +50,7 @@ public class HotelServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, Object> model = new HashMap<>();
 
-        List<Hotel> hotels = hotelDao.findAll();
-        LOG.info("Found {} hotels", hotels.size());
-
-        model.put("hotels", hotels);
-
+        hotelsListPublisher.publishAllHotels(model);
         citiesListPublisher.publishAllCities(model);
         countriesListPublisher.publishAllCountries(model);
 

@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 @Stateless
-public class PurchaseListPublisher {
+public class PurchasesListPublisher {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PurchaseListPublisher.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PurchasesListPublisher.class);
 
     @Inject
     private PurchaseDao purchaseDao;

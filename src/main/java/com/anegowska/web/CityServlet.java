@@ -1,8 +1,7 @@
 package com.anegowska.web;
 
-import com.anegowska.dao.CityDao;
 import com.anegowska.freemarker.TemplateProvider;
-import com.anegowska.model.City;
+import com.anegowska.publishers.CitiesListPublisher;
 import com.anegowska.services.CityDeleteService;
 import com.anegowska.services.CitySaveService;
 import freemarker.template.Template;
@@ -18,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @WebServlet("/city")
@@ -32,7 +30,7 @@ public class CityServlet extends HttpServlet {
     private TemplateProvider templateProvider;
 
     @Inject
-    private CityDao cityDao;
+    private CitiesListPublisher citiesListPublisher;
 
     @Inject
     private CitySaveService citySaveService;
@@ -44,10 +42,7 @@ public class CityServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, Object> model = new HashMap<>();
 
-        List<City> cities = cityDao.findAll();
-        LOG.info("Found {} cities", cities.size());
-
-        model.put("cities", cities);
+        citiesListPublisher.publishAllCities(model);
 
         Template template = templateProvider.getTemplate(
                 getServletContext(), TEMPLATE_NAME
@@ -64,7 +59,6 @@ public class CityServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String action = req.getParameter("action");
-
 
         if ("add".equals(action)) {
             citySaveService.save(req);

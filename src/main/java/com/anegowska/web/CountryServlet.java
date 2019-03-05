@@ -1,8 +1,7 @@
 package com.anegowska.web;
 
-import com.anegowska.dao.CountryDao;
 import com.anegowska.freemarker.TemplateProvider;
-import com.anegowska.model.Country;
+import com.anegowska.publishers.CountriesListPublisher;
 import com.anegowska.services.CountryDeleteService;
 import com.anegowska.services.CountrySaveService;
 import freemarker.template.Template;
@@ -18,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @WebServlet("/country")
@@ -32,7 +30,7 @@ public class CountryServlet extends HttpServlet {
     private TemplateProvider templateProvider;
 
     @Inject
-    private CountryDao countryDao;
+    private CountriesListPublisher countriesListPublisher;
 
     @Inject
     private CountrySaveService countrySaveService;
@@ -44,10 +42,7 @@ public class CountryServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, Object> model = new HashMap<>();
 
-        List<Country> countries = countryDao.findAll();
-        LOG.info("Found {} countries", countries.size());
-
-        model.put("countries", countries);
+        countriesListPublisher.publishAllCountries(model);
 
         Template template = templateProvider.getTemplate(
                 getServletContext(), TEMPLATE_NAME
@@ -64,7 +59,6 @@ public class CountryServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String action = req.getParameter("action");
-
 
         if ("add".equals(action)) {
             countrySaveService.save(req);
