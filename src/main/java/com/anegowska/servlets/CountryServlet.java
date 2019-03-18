@@ -1,9 +1,9 @@
-package com.anegowska.web;
+package com.anegowska.servlets;
 
 import com.anegowska.freemarker.TemplateProvider;
-import com.anegowska.publishers.CitiesListPublisher;
-import com.anegowska.services.CityDeleteService;
-import com.anegowska.services.CitySaveService;
+import com.anegowska.publishers.CountriesListPublisher;
+import com.anegowska.services.CountryDeleteService;
+import com.anegowska.services.CountrySaveService;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -19,30 +19,30 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/city")
-public class CityServlet extends HttpServlet {
+@WebServlet("/country")
+public class CountryServlet extends HttpServlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CityServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CountryServlet.class);
 
-    private static final String TEMPLATE_NAME = "city";
+    private static final String TEMPLATE_NAME = "country";
 
     @Inject
     private TemplateProvider templateProvider;
 
     @Inject
-    private CitiesListPublisher citiesListPublisher;
+    private CountriesListPublisher countriesListPublisher;
 
     @Inject
-    private CitySaveService citySaveService;
+    private CountrySaveService countrySaveService;
 
     @Inject
-    private CityDeleteService cityDeleteService;
+    private CountryDeleteService countryDeleteService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, Object> model = new HashMap<>();
 
-        citiesListPublisher.publishAllCities(model);
+        countriesListPublisher.publishAllCountries(model);
 
         Template template = templateProvider.getTemplate(
                 getServletContext(), TEMPLATE_NAME
@@ -61,11 +61,13 @@ public class CityServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if ("add".equals(action)) {
-            citySaveService.save(req);
+            countrySaveService.save(req);
         } else if ("delete".equals(action)) {
-            cityDeleteService.delete(req);
+            countryDeleteService.delete(req);
         }
 
         doGet(req, resp);
     }
+
+
 }

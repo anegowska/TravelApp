@@ -1,8 +1,11 @@
-package com.anegowska.web;
+package com.anegowska.servlets;
 
 import com.anegowska.freemarker.TemplateProvider;
-import com.anegowska.services.CustomerDeleteService;
-import com.anegowska.services.CustomerSaveService;
+import com.anegowska.publishers.CitiesListPublisher;
+import com.anegowska.publishers.CountriesListPublisher;
+import com.anegowska.publishers.HotelsListPublisher;
+import com.anegowska.services.HotelDeleteService;
+import com.anegowska.services.HotelSaveService;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -18,28 +21,38 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/customer")
-public class CustomerServlet extends HttpServlet {
+@WebServlet("/hotel")
+public class HotelServlet extends HttpServlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CustomerServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HotelServlet.class);
 
-    private static final String TEMPLATE_NAME = "add-customer";
+    private static final String TEMPLATE_NAME = "/hotel";
 
     @Inject
     private TemplateProvider templateProvider;
 
     @Inject
-    private CustomerSaveService customerSaveService;
+    private HotelsListPublisher hotelsListPublisher;
 
     @Inject
-    private CustomerDeleteService customerDeleteService;
+    private HotelSaveService hotelSaveService;
+
+    @Inject
+    private HotelDeleteService hotelDeleteService;
+
+    @Inject
+    private CitiesListPublisher citiesListPublisher;
+
+    @Inject
+    private CountriesListPublisher countriesListPublisher;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        resp.addHeader("Content-Type", "text/html; charset=utf-8");
-
         Map<String, Object> model = new HashMap<>();
+
+        hotelsListPublisher.publishAllHotels(model);
+        citiesListPublisher.publishAllCities(model);
+        countriesListPublisher.publishAllCountries(model);
 
         Template template = templateProvider.getTemplate(
                 getServletContext(), TEMPLATE_NAME
@@ -57,13 +70,12 @@ public class CustomerServlet extends HttpServlet {
 
         String action = req.getParameter("action");
 
-
         if ("add".equals(action)) {
-            customerSaveService.save(req);
+            hotelSaveService.save(req);
         } else if ("delete".equals(action)) {
-            customerDeleteService.delete(req);
+            hotelDeleteService.delete(req);
         }
 
-        resp.sendRedirect("/customers");
+        doGet(req, resp);
     }
 }

@@ -1,11 +1,9 @@
-package com.anegowska.web;
+package com.anegowska.servlets;
 
 import com.anegowska.freemarker.TemplateProvider;
 import com.anegowska.publishers.CitiesListPublisher;
-import com.anegowska.publishers.CountriesListPublisher;
-import com.anegowska.publishers.HotelsListPublisher;
-import com.anegowska.services.HotelDeleteService;
-import com.anegowska.services.HotelSaveService;
+import com.anegowska.services.CityDeleteService;
+import com.anegowska.services.CitySaveService;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -21,38 +19,30 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/hotel")
-public class HotelServlet extends HttpServlet {
+@WebServlet("/city")
+public class CityServlet extends HttpServlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HotelServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CityServlet.class);
 
-    private static final String TEMPLATE_NAME = "/hotel";
+    private static final String TEMPLATE_NAME = "city";
 
     @Inject
     private TemplateProvider templateProvider;
 
     @Inject
-    private HotelsListPublisher hotelsListPublisher;
-
-    @Inject
-    private HotelSaveService hotelSaveService;
-
-    @Inject
-    private HotelDeleteService hotelDeleteService;
-
-    @Inject
     private CitiesListPublisher citiesListPublisher;
 
     @Inject
-    private CountriesListPublisher countriesListPublisher;
+    private CitySaveService citySaveService;
+
+    @Inject
+    private CityDeleteService cityDeleteService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, Object> model = new HashMap<>();
 
-        hotelsListPublisher.publishAllHotels(model);
         citiesListPublisher.publishAllCities(model);
-        countriesListPublisher.publishAllCountries(model);
 
         Template template = templateProvider.getTemplate(
                 getServletContext(), TEMPLATE_NAME
@@ -71,9 +61,9 @@ public class HotelServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if ("add".equals(action)) {
-            hotelSaveService.save(req);
+            citySaveService.save(req);
         } else if ("delete".equals(action)) {
-            hotelDeleteService.delete(req);
+            cityDeleteService.delete(req);
         }
 
         doGet(req, resp);

@@ -1,7 +1,8 @@
-package com.anegowska.web;
+package com.anegowska.servlets;
 
 import com.anegowska.freemarker.TemplateProvider;
-import com.anegowska.publishers.CustomersListPublisher;
+import com.anegowska.services.CustomerDeleteService;
+import com.anegowska.services.CustomerSaveService;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -17,25 +18,28 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/customers")
-public class CustomersListServlet extends HttpServlet {
+@WebServlet("/customer")
+public class CustomerServlet extends HttpServlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CustomersListServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CustomerServlet.class);
 
-    private static final String TEMPLATE_NAME = "/customers";
+    private static final String TEMPLATE_NAME = "add-customer";
 
     @Inject
     private TemplateProvider templateProvider;
 
     @Inject
-    private CustomersListPublisher customersListPublisher;
+    private CustomerSaveService customerSaveService;
 
+    @Inject
+    private CustomerDeleteService customerDeleteService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Map<String, Object> model = new HashMap<>();
 
-        customersListPublisher.publishAlCustomers(model);
+        resp.addHeader("Content-Type", "text/html; charset=utf-8");
+
+        Map<String, Object> model = new HashMap<>();
 
         Template template = templateProvider.getTemplate(
                 getServletContext(), TEMPLATE_NAME
@@ -46,5 +50,20 @@ public class CustomersListServlet extends HttpServlet {
         } catch (TemplateException e) {
             LOG.error("Error while processing template: ", e);
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String action = req.getParameter("action");
+
+
+        if ("add".equals(action)) {
+            customerSaveService.save(req);
+        } else if ("delete".equals(action)) {
+            customerDeleteService.delete(req);
+        }
+
+        resp.sendRedirect("/customers");
     }
 }

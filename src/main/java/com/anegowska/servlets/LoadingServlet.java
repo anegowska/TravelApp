@@ -1,4 +1,4 @@
-package com.anegowska.web;
+package com.anegowska.servlets;
 
 import com.anegowska.dao.CityDao;
 import com.anegowska.dao.CountryDao;

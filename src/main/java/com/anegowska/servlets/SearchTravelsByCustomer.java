@@ -1,4 +1,4 @@
-package com.anegowska.web;
+package com.anegowska.servlets;
 
 import com.anegowska.dao.CustomerDao;
 import com.anegowska.dao.PurchaseDao;

@@ -1,9 +1,7 @@
-package com.anegowska.web;
+package com.anegowska.servlets;
 
 import com.anegowska.freemarker.TemplateProvider;
-import com.anegowska.publishers.CountriesListPublisher;
-import com.anegowska.services.CountryDeleteService;
-import com.anegowska.services.CountrySaveService;
+import com.anegowska.publishers.CustomersListPublisher;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -19,30 +17,25 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/country")
-public class CountryServlet extends HttpServlet {
+@WebServlet("/customers")
+public class CustomersListServlet extends HttpServlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CountryServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CustomersListServlet.class);
 
-    private static final String TEMPLATE_NAME = "country";
+    private static final String TEMPLATE_NAME = "/customers";
 
     @Inject
     private TemplateProvider templateProvider;
 
     @Inject
-    private CountriesListPublisher countriesListPublisher;
+    private CustomersListPublisher customersListPublisher;
 
-    @Inject
-    private CountrySaveService countrySaveService;
-
-    @Inject
-    private CountryDeleteService countryDeleteService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, Object> model = new HashMap<>();
 
-        countriesListPublisher.publishAllCountries(model);
+        customersListPublisher.publishAlCustomers(model);
 
         Template template = templateProvider.getTemplate(
                 getServletContext(), TEMPLATE_NAME
@@ -54,20 +47,4 @@ public class CountryServlet extends HttpServlet {
             LOG.error("Error while processing template: ", e);
         }
     }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        String action = req.getParameter("action");
-
-        if ("add".equals(action)) {
-            countrySaveService.save(req);
-        } else if ("delete".equals(action)) {
-            countryDeleteService.delete(req);
-        }
-
-        doGet(req, resp);
-    }
-
-
 }

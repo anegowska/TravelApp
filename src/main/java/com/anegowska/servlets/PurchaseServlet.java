@@ -1,4 +1,4 @@
-package com.anegowska.web;
+package com.anegowska.servlets;
 
 import com.anegowska.freemarker.TemplateProvider;
 import com.anegowska.publishers.CustomersListPublisher;
