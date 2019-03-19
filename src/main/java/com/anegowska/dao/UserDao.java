@@ -1,5 +1,6 @@
 package com.anegowska.dao;
 
+import com.anegowska.exceptions.UserNotFoundException;
 import com.anegowska.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,7 @@ public class UserDao {
         }
     }
 
-    public User findEmail(String userEmail) {
+    public User findByEmail(String userEmail) {
         return entityManager.find(User.class, userEmail);
     }
 
@@ -55,10 +56,16 @@ public class UserDao {
         return result;
     }
 
-    public User findByEmail(String sessionEmail) {
-        final Query query = entityManager.createQuery("SELECT u FROM User u WHERE u.userEmail = :email");
-        query.setParameter("email", sessionEmail);
+    public User findByEmailAndPassword(String email, String password) throws UserNotFoundException {
+        final Query query = entityManager.createQuery("SELECT u FROM User u WHERE u.userEmail = :email " +
+                "AND u.userPassword = :password");
+        query.setParameter("email", email);
+        query.setParameter("password", password);
 
-        return (User) query.getSingleResult();
+        User user = (User) query.getSingleResult();
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+        return user;
     }
 }
