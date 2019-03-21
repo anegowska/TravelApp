@@ -16,6 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class LoginServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(LoginServlet.class);
 
     private static final String TEMPLATE_NAME = "login";
+    private static final String SESSION_EMAIL = "userEmail";
 
     @Inject
     private UserLoginService userLoginService;
@@ -46,12 +48,16 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, Object> model = new HashMap<>();
+        HttpSession session = req.getSession(true);
 
         String email = req.getParameter("email");
         String password = req.getParameter("password");
 
+        session.setAttribute(SESSION_EMAIL, email);
+
         try {
             userLoginService.findUser(email, password);
+            LOG.info("User logged in");
             resp.sendRedirect("/loading");
         } catch (UserNotFoundException e) {
             List<String> errors = new ArrayList<>();
